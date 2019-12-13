@@ -1,0 +1,9 @@
+name: nextflow-base
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - fastqc
+  - multiqc
+  - kallisto

@@ -76,6 +76,7 @@ process multiqc {
 
     script:
     """
+    mkdir -p ${params.outdir}
     multiqc --force ${params.outdir} -o ${params.outdir}
     """
 }

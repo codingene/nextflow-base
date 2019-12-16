@@ -1,4 +1,4 @@
-FROM continuumio/miniconda:4.7.12
+FROM continuumio/miniconda3:4.7.12
 MAINTAINER Sangram Keshari Sahu <sangramsahu15@gmail.com>
 
 RUN apt-get -y install ttf-dejavu

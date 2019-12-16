@@ -73,14 +73,14 @@ process quant {
 process multiqc {
 
     input:
-    file('*') from fastqc_ch.collect()
+    file('*') from quant_ch.mix(fastqc_ch).collect()
     
     output:
     file('multiqc_report.html') optional true
 
     script:
     """
-    multiqc . --force -o $res_dir
+    multiqc . -f -o $res_dir
     """
     }
 

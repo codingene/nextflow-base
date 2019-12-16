@@ -69,19 +69,20 @@ process quant {
     """
 }
 
-process multiqc {
+
+workflow.onComplete {
+    
+    process multiqc {
     
     output:
     file('multiqc_report.html') optional true
 
     script:
     """
-    mkdir -p ${params.outdir}
-    multiqc --force ${params.outdir} -o ${params.outdir}
+    mkdir -p $params.outdir
+    multiqc --force $params.outdir -o $params.outdir
     """
-}
+    }
 
-
-workflow.onComplete {
 	log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $params.outdir/multiqc_report.html\n" : "Oops .. something went wrong" )
 }

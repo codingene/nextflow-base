@@ -21,6 +21,26 @@ Channel
     .fromFilePairs( params.reads, checkExists:true )
     .into { read_pairs_ch; read_pairs2_ch }
 
+process fastp {
+    tag "FASTP on $sample_id"
+    publishDir params.outdir, mode: 'copy'
+
+    input:
+    set sample_id, file(reads) from read_pairs2_ch
+
+    output:
+    file("fastqc_${sample_id}_logs") into fastqc_ch
+
+
+    script:
+    """
+    mkdir fastqc_${sample_id}_logs
+    fastp -i $read_pairs_ch -I $read_pairs2_ch \
+        -o $res_dir/filtered_reads/$read_pairs_ch \
+        -O $res_dir/filtered_reads/$read_pairs2_ch \
+    """ 
+}
+
 process fastqc {
     tag "FASTQC on $sample_id"
 

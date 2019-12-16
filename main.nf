@@ -15,6 +15,7 @@ params.transcriptome = "$baseDir/test_data/reference/Ensembl.GRCh38.93/Homo_sapi
 params.outdir = "$baseDir/results"
 
 transcriptome_file = file(params.transcriptome)
+res_dir = file(params.outdir)
 
 Channel
     .fromFilePairs( params.reads, checkExists:true )
@@ -22,7 +23,6 @@ Channel
 
 process fastqc {
     tag "FASTQC on $sample_id"
-    publishDir params.outdir
 
     input:
     set sample_id, file(reads) from read_pairs2_ch
@@ -35,7 +35,7 @@ process fastqc {
     """
     mkdir fastqc_${sample_id}_logs
     fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
-    """
+    """ 
 }
 
 process index {
@@ -55,6 +55,7 @@ process index {
 
 process quant {
     tag "$pair_id"
+    publishDir params.outdir, mode: 'copy'
 
     input:
     file index from index_ch
@@ -69,20 +70,21 @@ process quant {
     """
 }
 
+process multiqc {
 
-workflow.onComplete {
-    
-    process multiqc {
+    input:
+    file('*') from fastqc_ch.collect()
     
     output:
     file('multiqc_report.html') optional true
 
     script:
     """
-    mkdir -p $params.outdir
-    multiqc --force $params.outdir -o $params.outdir
+    multiqc . --force -o $res_dir
     """
     }
 
-	log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $params.outdir/multiqc_report.html\n" : "Oops .. something went wrong" )
+workflow.onComplete {
+    
+	log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $res_dir/multiqc_report.html\n" : "Oops .. something went wrong" )
 }

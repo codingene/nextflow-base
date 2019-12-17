@@ -22,22 +22,26 @@ Channel
     .into { read_pairs_ch; read_pairs2_ch }
 
 process fastp {
-    tag "FASTP on $sample_id"
+    tag "FASTP on $pair_id"
     publishDir params.outdir, mode: 'copy'
 
     input:
-    set sample_id, file(reads) from read_pairs2_ch
+    set pair_id, file(reads) from read_pairs_ch
 
     output:
-    file("fastqc_${sample_id}_logs") into fastqc_ch
-
-
+    file("filtred_${pair_id}/${pair_id}_{1,2}.fastq.gz") into fastp_ch
+    
     script:
     """
-    mkdir fastqc_${sample_id}_logs
-    fastp -i $read_pairs_ch -I $read_pairs2_ch \
-        -o $res_dir/filtered_reads/$read_pairs_ch \
-        -O $res_dir/filtered_reads/$read_pairs2_ch \
+    mkdir -p filtred_${pair_id}
+    fastp -i ${reads[0]} -I ${reads[1]} \
+        -o filtred_${pair_id}/${reads[0]} \
+        -O filtred_${pair_id}/${reads[1]} \
+        --json filtred_${pair_id}/${pair_id}_fastp.json \
+		--html filtred_${pair_id}/${pair_id}_fastp.html \
+        --detect_adapter_for_pe \
+        --disable_length_filtering \
+        --correction
     """ 
 }
 
@@ -74,19 +78,19 @@ process index {
 }
 
 process quant {
-    tag "$pair_id"
+    tag "Kallisto quant on $filtred_pair_id"
     publishDir params.outdir, mode: 'copy'
 
     input:
     file index from index_ch
-    set pair_id, file(reads) from read_pairs_ch
+    set filtred_pair_id, file(pair_id) from fastp_ch
 
     output:
     file(pair_id) into quant_ch
 
     script:
     """
-    kallisto quant -i $index ${reads[0]} ${reads[1]} -o $pair_id
+    kallisto quant -i $index ${filtred_pair_id[0]} ${filtred_pair_id[1]} -o $pair_id
     """
 }
 

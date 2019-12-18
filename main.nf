@@ -19,6 +19,7 @@ res_dir = file(params.outdir)
 
 Channel
     .fromFilePairs( params.reads, checkExists:true )
+    .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
     .into { read_pairs_ch; read_pairs2_ch }
 
 process fastp {
@@ -29,7 +30,8 @@ process fastp {
     set pair_id, file(reads) from read_pairs_ch
 
     output:
-    file("filtred_${pair_id}/${pair_id}_{1,2}.fastq.gz") into fastp_ch
+
+    set pair_id, file("filtred_${pair_id}/${reads[0]}"), file("filtred_${pair_id}/${reads[1]}") into (fastp1_ch, fastp2_ch )
     
     script:
     """
@@ -45,11 +47,12 @@ process fastp {
     """ 
 }
 
+
 process fastqc {
     tag "FASTQC on $sample_id"
 
     input:
-    set sample_id, file(reads) from read_pairs2_ch
+    set sample_id, file(fq1), file(fq2) from fastp1_ch
 
     output:
     file("fastqc_${sample_id}_logs") into fastqc_ch
@@ -58,7 +61,7 @@ process fastqc {
     script:
     """
     mkdir fastqc_${sample_id}_logs
-    fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
+    fastqc -o fastqc_${sample_id}_logs -f fastq -q ${fq1} ${fq2}
     """ 
 }
 
@@ -83,14 +86,14 @@ process quant {
 
     input:
     file index from index_ch
-    set filtred_pair_id, file(pair_id) from fastp_ch
+    set filtred_pair_id, file(fq1), file(fq2) from fastp2_ch
 
     output:
-    file(pair_id) into quant_ch
+    file("quant_${filtred_pair_id}") into quant_ch
 
     script:
     """
-    kallisto quant -i $index ${filtred_pair_id[0]} ${filtred_pair_id[1]} -o $pair_id
+    kallisto quant -i $index ${fq1} ${fq2} -o quant_${filtred_pair_id}
     """
 }
 

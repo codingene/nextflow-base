@@ -1,10 +1,7 @@
 jdk:
 - openjdk8
 services:
-- docker
-branches:
-  only:
-  - master  
+- docker 
 install:
 - sudo apt-get -qq update
 - sudo apt-get -qq -y install graphviz realpath

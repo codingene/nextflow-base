@@ -23,7 +23,7 @@ Channel
     .into { read_pairs_ch; read_pairs2_ch }
 
 process fastp {
-    tag "FASTP on $pair_id"
+    tag "filtering on $pair_id"
     publishDir params.outdir, mode: 'copy'
 
     input:
@@ -35,7 +35,7 @@ process fastp {
     
     script:
     """
-    mkdir -p filtred_${pair_id}
+    mkdir filtred_${pair_id}
     fastp -i ${reads[0]} -I ${reads[1]} \
         -o filtred_${pair_id}/${reads[0]} \
         -O filtred_${pair_id}/${reads[1]} \

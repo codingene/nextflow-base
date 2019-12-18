@@ -1,10 +1,10 @@
 jdk:
-- openjdk8
+  - openjdk8
 services:
-- docker 
+  - docker 
 install:
-- sudo apt-get -qq update
-- sudo apt-get -qq -y install graphviz realpath
+  - sudo apt-get -qq update
+  - sudo apt-get -qq -y install graphviz realpath
 script:
-- curl -fsSL get.nextflow.io | bash
-- ./nextflow run . -with-docker
+  - curl -fsSL get.nextflow.io | bash
+  - ./nextflow run . -with-docker

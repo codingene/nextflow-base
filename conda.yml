@@ -5,6 +5,6 @@ channels:
   - conda-forge
 dependencies:
   - fastqc=0.11.8
-  - pastp=0.20.0
+  - fastp=0.20.0
   - multiqc=1.8
   - kallisto=0.46.1

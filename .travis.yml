@@ -5,7 +5,7 @@ services:
 
 before_install:
   - docker pull codingene/nextflow-base:dev
-  - docker tag codingene/nextflow-base:dev codingene/nextflow-base:0.0.1
+  - docker tag codingene/nextflow-base:dev codingene/nextflow-base:0.1.0
 
 install:
   - sudo apt-get -qq update

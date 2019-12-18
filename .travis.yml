@@ -12,17 +12,4 @@ install:
   - sudo apt-get -qq -y install graphviz realpath
 script:
   - curl -fsSL get.nextflow.io | bash
-  - ./nextflow run . -with-docker -with-report travis_built_report.html
-
-addons:
-  artifacts:
-    paths:
-    - $HOME/build/codingene/nextflow-base/travis_built_report.html
-
-deploy:
-  - provider: s3
-  - access_key_id: $ARTIFACTS_KEY
-  - secret_access_key: $ARTIFACTS_SECRET
-  - bucket: $ARTIFACTS_BUCKET
-  - skip_cleanup: true
-  - acl: public_rea
+  - ./nextflow run . -with-docker

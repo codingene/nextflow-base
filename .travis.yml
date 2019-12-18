@@ -20,10 +20,9 @@ addons:
     - $HOME/build/codingene/nextflow-base/travis_built_report.html
 
 deploy:
-
-- provider: s3
-- access_key_id: "AKIAVO4765TR7CX7SUFG"
-- secret_access_key: "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"
-- bucket: "codingene"
-- skip_cleanup: true
-- acl: public_read
+  - provider: s3
+  - access_key_id: $ARTIFACTS_KEY
+  - secret_access_key: $ARTIFACTS_SECRET
+  - bucket: $ARTIFACTS_BUCKET
+  - skip_cleanup: true
+  - acl: public_rea

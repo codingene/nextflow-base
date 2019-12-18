@@ -21,7 +21,7 @@ jobs:
       - name: Download and tag image
         run: |
           docker pull codingene/nextflow-base:latest
-          docker tag odingene/nextflow-base:latest odingene/nextflow-base:0.0.1
+          docker tag codingene/nextflow-base:latest codingene/nextflow-base:0.0.1
       - name: Run tests
         run: |
           nextflow run ${GITHUB_WORKSPACE} -with-docker

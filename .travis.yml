@@ -12,4 +12,18 @@ install:
   - sudo apt-get -qq -y install graphviz realpath
 script:
   - curl -fsSL get.nextflow.io | bash
-  - ./nextflow run . -with-docker
+  - ./nextflow run . -with-docker -with-report travis_built_report.html
+
+addons:
+  artifacts:
+    paths:
+    - $HOME/build/codingene/nextflow-base/travis_built_report.html
+
+deploy:
+
+- provider: s3
+- access_key_id: "AKIAVO4765TR7CX7SUFG"
+- secret_access_key: "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"
+- bucket: "codingene"
+- skip_cleanup: true
+- acl: public_read

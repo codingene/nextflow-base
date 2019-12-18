@@ -14,3 +14,4 @@ This a basic nextflow structure which do quality check (fastqc), filtering (fast
 cd nextflow-base
 nextflow run .
 ```
+[Test run stats report](https://codingene.github.io/nextflow-base/test_run_stats/run_report.html)

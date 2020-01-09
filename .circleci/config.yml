@@ -8,6 +8,7 @@ jobs:
       - run:
           name: Run the workflow
           command: |
+            apt-get -y install curl
             curl -fsSL get.nextflow.io | bash
             ./nextflow run . 
             echo "Listing out files"

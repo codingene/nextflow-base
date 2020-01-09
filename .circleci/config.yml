@@ -1,0 +1,17 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: codingene/nextflow-base:dev
+    steps:
+      - checkout            
+      - run:
+          name: Run the workflow
+          command: |
+            curl -fsSL get.nextflow.io | bash
+            ./nextflow run . 
+            echo "Listing out files"
+            ls -l
+            tar -cvf log_dir.tar /root/project/results
+      - store_artifacts:
+          path: log_dir.tar

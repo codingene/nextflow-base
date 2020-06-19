@@ -456,7 +456,7 @@ rm miniconda.sh</code></pre>
 <p>Check help menu</p>
 <pre class="bash"><code>nextflow run path-to/nextflow-base/main.nf --help</code></pre>
 <p>The typical command for running the pipeline is as follows</p>
-<pre class="bash"><code>nextflow run path-to/raw-read-qc/main.nf [arguments] -profile docker</code></pre>
+<pre class="bash"><code>nextflow run path-to/nextflow-base [arguments] -profile docker</code></pre>
 </div>
 <div id="arguments" class="section level2">
 <h2><span class="header-section-number">4.2</span> Arguments</h2>
@@ -500,8 +500,8 @@ rm miniconda.sh</code></pre>
 <h1><span class="header-section-number">5</span> Output Directory Structure</h1>
 <pre class="bash"><code>|- Sample-Name/ID  
     |- fastp_filtred_reads
-  |- fastqc_report_post_filter
-  |- fastqc_report_pre_filter</code></pre>
+  |- fastqc_report
+  |- kallisto_quant</code></pre>
 </div>
 <div id="changelog" class="section level1">
 <h1><span class="header-section-number">6</span> Changelog</h1>

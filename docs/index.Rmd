@@ -1,0 +1,155 @@
+---
+title: "codingene/nextflow-base (v1.0)"
+author: "Developed by Codingene."
+date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
+output:
+  html_document:
+    keep_md: true
+    #theme: united
+    #highlight: tango
+    toc: true
+    number_sections: true
+  pdf_document:
+    toc: true
+    number_sections: true
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# About
+
+Currently on this pipeline three most based steps on any Sequence based analysis (starts from fastq files)
+
+* Quality Check (using fastqc)
+* Filtering (Using fastp) 
+* Sequence Read Quantification (Using kallisto)
+
+This can be used as a base to add other `process`.
+
+## Outlines
+
+* Adapter removal and Filtering of RAW reads using fastp
+
+# Setup
+
+Pipeline dependency. 
+
+* [Nextflow](https://www.nextflow.io/) on which this workflow framework is based.
+* [Docker](https://www.docker.io/) or [Conda](https://docs.conda.io/en/latest/) for tools environment. (It is recommended to use Docker for this workflow.)
+
+## Getting and Installing Nextflow
+
+This is required only once per system. Check if your system already have it by typing `nextflow` from any terminal location. If not follow there steps -
+
+```bash
+curl -s https://get.nextflow.io | bash
+mv nextflow usr/bin/
+```
+
+## Getting and Installing Docker
+
+Follow this - [How to install and use docker on ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
+
+## Installing Conda
+
+We will use miniconda for this purpose.
+
+```bash
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+bash miniconda.sh -b -p $HOME/miniconda3
+export PATH="$HOME/miniconda3/bin:$PATH"
+rm miniconda.sh
+```
+
+## Getting This Workflow
+
+```{bash}
+git clone https://github.com/codingene/nextflow-base.git
+```
+
+# Test the Workflow
+
+Test is to check if basic components of a workflow is able to run in a system with everything setup properly. 
+
+Supposing you are in workflow directory, run following -
+
+```bash
+nextflow run mian.nf -profile test,docker
+```
+
+> Note: Test run may take some time on a first time, because it will download all the tools environment (docker-images/conda-env) automatically in background.
+
+If this success you are good to go on running with your own datasets.
+
+# Running the workflow
+
+## Basic Usage
+
+Check help menu
+
+```{bash}
+nextflow run path-to/nextflow-base/main.nf --help
+```
+
+The typical command for running the pipeline is as follows
+
+```{bash}
+nextflow run path-to/nextflow-base [arguments] -profile docker
+```
+
+## Arguments 
+
+### Workflow Arguments
+
+#### `--reads` [mandatory]
+
+A fasta file directory where all the paired-end reads present. 
+
+They must follow this naming convention of `*_{1,2}.fastq.gz` or `*_{1,2}.fq.gz`
+
+#### `--cdna` [mandatory]
+
+Path to a cDNA fasta file.
+
+#### `--outdir` [optional]
+
+Output folder name. If not given it will create a `results` named directory on working location. This is where you can find all the results post pipeline run.
+
+#### Individual Tool parameters [optional]
+
+For details of individual tool parameters check respective documentation. All are optional with default values (please check bellow)
+
+* `--fastp.length_required` (default: 75)
+    
+* `--fastp.length_limit` (default: 151)
+
+* `--fastp.qualified_quality_phred` (default: 30)
+
+### System Arguments
+
+This arguments are optional but recommended to provided with higher numbers as per system configuration and data need.
+
+> --max_cpus    : [Recommended] Number of threads/CPU to assign (default = 1)  
+> --max_memory  : [Recommended] Maximum Memory in GB (default = '2 GB')  
+> --max_time    : [Optional] Maximum time for a single step (default = '1h')
+
+
+# Output Directory Structure
+
+```bash
+|- Sample-Name/ID  
+	|- fastp_filtred_reads
+  |- fastqc_report
+  |- kallisto_quant
+```
+
+# Changelog
+
+More information about Changelog (version updates) can be found in [NEWS.md](../NEWS.md)
+
+# FAQs
+
+[assets]: ../assets

@@ -1,11 +1,8 @@
 FROM continuumio/miniconda3:4.7.12
 MAINTAINER Sangram Keshari Sahu <sangramsahu15@gmail.com>
 
-RUN apt-get -y install ttf-dejavu
-
-COPY conda.yml .
+COPY envs/main.yml .
 RUN \
-   conda env update -n root -f conda.yml \
-&& conda clean -a
-
-#RUN apt-get install -y procps
+   apt-get install procps ttf-dejavu -y \
+   && conda env update -n root -f main.yml \
+   && conda clean -a

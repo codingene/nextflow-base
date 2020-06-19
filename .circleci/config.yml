@@ -1,18 +1,24 @@
 version: 2.0
 jobs:
   build:
-    docker:
-      - image: codingene/nextflow-base:dev
+    machine:
+      pre:
+        - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+      java:
+        version: oraclejdk8
+      services:
+        - docker
     steps:
-      - checkout            
+      - checkout    
       - run:
+          name: Get Nextflow and required tools
+          command: |
+            curl -fsSL get.nextflow.io | bash
+            #apt install -y zip unzip
+      - run:    
           name: Run the workflow
           command: |
-            apt-get -y install curl
-            curl -fsSL get.nextflow.io | bash
-            ./nextflow run . 
-            echo "Listing out files"
-            ls -l
-            tar -cvf log_dir.tar /root/project/results
+            ./nextflow run main.nf -profile test,docker
+          no_output_timeout: 1500
       - store_artifacts:
-          path: log_dir.tar
+          path: test_out

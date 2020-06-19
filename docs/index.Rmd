@@ -97,7 +97,7 @@ nextflow run path-to/nextflow-base/main.nf --help
 The typical command for running the pipeline is as follows
 
 ```{bash}
-nextflow run path-to/raw-read-qc/main.nf [arguments] -profile docker
+nextflow run path-to/nextflow-base [arguments] -profile docker
 ```
 
 ## Arguments 
@@ -142,8 +142,8 @@ This arguments are optional but recommended to provided with higher numbers as p
 ```bash
 |- Sample-Name/ID  
 	|- fastp_filtred_reads
-  |- fastqc_report_post_filter
-  |- fastqc_report_pre_filter
+  |- fastqc_report
+  |- kallisto_quant
 ```
 
 # Changelog

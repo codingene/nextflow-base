@@ -208,6 +208,8 @@ process multiqc {
     output:
     file('multiqc_report.html') optional true
 
+    when: params.multiqc_report
+
     script:
     """
     multiqc . 
